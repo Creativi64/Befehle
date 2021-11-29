@@ -87,6 +87,174 @@ ldapsearch -x -LLL -D"Fritz@kreuzerkeknet.de" -W -b \ "OU=Firma,DC=kreuzerKekNET
 die Security id kannn nach einem backup nicht wieder eingelsen werden
 des wegen ist es vorteil hast user fürs erste zu deaktivieren bis man sie komplett löscht
 
+## isntall
+
+ sudo apt-get install ldapscripts
+
+## suchen
+
+ldapsearch -x -LLL -D"Fritz@kreuzerkeknet.de" -W -b \ "OU=Firma,DC=kreuzerKekNETWORK,DC=de" -H "ldap://10.200.10.1:389"
+
+> erfordert Kreberos ticket
+
+ldapsearch -x -LLL -D "Administrator@kreuzerkeknetwork.de" -W -b "CN=Users,DC=KreuzerKekNETWORK,DC=de" -s sub -H "ldap://10.200.10.1:389" "(&(sAMAccountType=805306368)(sn=Fritz)(sAMAccountName~=Fritz*))" "*"
+
+ldapsearch -x -LLL -D "Administrator@kreuzerkeknetwork.de" -W -b "OU=Firma,CN=Users,DC=KreuzerKekNETWORK,DC=de" -s sub -H "ldap://10.200.10.1:389" "(&(sAMAccountType=805306368)(sAMAccountName=Fr*))" "*"
+
+dapsearch -x -LLL -D "Administrator@kreuzerkeknetwork.de" -W -b "OU=Firma,DC=KreuzerKekNETWORK,DC=de" -s sub -H "ldap://10.200.10.1:389" "(&(sAMAccountType=805306368)(sAMAccountName=Fr*))" "sAMAccountName"
+
+---
+
+ldapsearch -x -b "DC=Test,DC=local" -H "ldap://192.168.179.71"
+ldapsearch -x -LLL -D "Administrator@Test.local" -W -b "DC=Test,DC=local" -H "ldap://192.168.179.71" "(&(sAMAccountType=805306368)(sn=Fritz)(sAMAccountName~=Fritz*))" "*"
+ldapsearch -x -LLL -D "Administrator@Test.local" -W -b "DC=Test,DC=local" -H "ldap://192.168.179.71" "(&(sAMAccountType=805306368))" "*"
+
+## User Export
+
+ ldifde -m -f "c:\backup.ldf" -r "(objectClass=user)" -d "Dc=KreuzerKekNETWORK,dc=de" -u
+
+## import
+
+ ldifde -i -f "c:\backup.ldf" -u
+
+## bei import ändern
+
+dn: CN=Fritz,OU=Firma,DC=kreuzerKekNETWORK,DC=de
+changetype: modify
+replace: sAMAccountName
+sAMAccountName: Fritz12345
+-
+
+
+
+ldapmodify -x -c -a -f "backuploadpas.ldif" -H "ldap://10.200.10.1" -D Administrator@kreuzerkeknetwork.de -W
+
+<http://pig.made-it.com/pig-adusers.html>
+
+# Kreberos Ticket Bekommen
+
+## Kerberos Datei Linix
+
+/etc/krb5.conf
+
+```bash
+[libdefaults]
+	default_realm = KREUZERKEKNETWORK.DE
+
+# The following krb5.conf variables are only for MIT Kerberos.
+	kdc_timesync = 1
+	ccache_type = 4
+	forwardable = true
+	proxiable = true
+
+# The following encryption type specification will be used by MIT Kerberos
+# if uncommented.  In general, the defaults in the MIT Kerberos code are
+# correct and overriding these specifications only serves to disable new
+# encryption types as they are added, creating interoperability problems.
+#
+# The only time when you might need to uncomment these lines and change
+# the enctypes is if you have local software that will break on ticket
+# caches containing ticket encryption types it doesn't know about (such as
+# old versions of Sun Java).
+
+# default_tgs_enctypes = des3-hmac-sha1
+# default_tkt_enctypes = des3-hmac-sha1
+# permitted_enctypes = des3-hmac-sha1
+
+# The following libdefaults parameters are only for Heimdal Kerberos.
+	fcc-mit-ticketflags = true
+
+[realms]
+	KREUZERKEKNETWORK.DE = {
+		kdc = SERVER.KREUZERKEKNETWORK.DE
+		admin_server = SERVER.KREUZERKEKNETWORK.DE
+	}
+	ATHENA.MIT.EDU = {
+		kdc = kerberos.mit.edu
+		kdc = kerberos-1.mit.edu
+		kdc = kerberos-2.mit.edu:88
+		admin_server = kerberos.mit.edu
+		default_domain = mit.edu
+	}
+	ZONE.MIT.EDU = {
+		kdc = casio.mit.edu
+		kdc = seiko.mit.edu
+		admin_server = casio.mit.edu
+	}
+	CSAIL.MIT.EDU = {
+		admin_server = kerberos.csail.mit.edu
+		default_domain = csail.mit.edu
+	}
+	IHTFP.ORG = {
+		kdc = kerberos.ihtfp.org
+		admin_server = kerberos.ihtfp.org
+	}
+	1TS.ORG = {
+		kdc = kerberos.1ts.org
+		admin_server = kerberos.1ts.org
+	}
+	ANDREW.CMU.EDU = {
+		admin_server = kerberos.andrew.cmu.edu
+		default_domain = andrew.cmu.edu
+	}
+        CS.CMU.EDU = {
+                kdc = kerberos-1.srv.cs.cmu.edu
+                kdc = kerberos-2.srv.cs.cmu.edu
+                kdc = kerberos-3.srv.cs.cmu.edu
+                admin_server = kerberos.cs.cmu.edu
+        }
+	DEMENTIA.ORG = {
+		kdc = kerberos.dementix.org
+		kdc = kerberos2.dementix.org
+		admin_server = kerberos.dementix.org
+	}
+	stanford.edu = {
+		kdc = krb5auth1.stanford.edu
+		kdc = krb5auth2.stanford.edu
+		kdc = krb5auth3.stanford.edu
+		master_kdc = krb5auth1.stanford.edu
+		admin_server = krb5-admin.stanford.edu
+		default_domain = stanford.edu
+	}
+        UTORONTO.CA = {
+                kdc = kerberos1.utoronto.ca
+                kdc = kerberos2.utoronto.ca
+                kdc = kerberos3.utoronto.ca
+                admin_server = kerberos1.utoronto.ca
+                default_domain = utoronto.ca
+	}
+
+[domain_realm]
+	.kreuzerkeknetwork.de = KREUZERKEKNETWORK.DE
+	kreuzerkeknetwork.de = KREUZERKEKNETWORK.DE
+	.mit.edu = ATHENA.MIT.EDU
+	mit.edu = ATHENA.MIT.EDU
+	.media.mit.edu = MEDIA-LAB.MIT.EDU
+	media.mit.edu = MEDIA-LAB.MIT.EDU
+	.csail.mit.edu = CSAIL.MIT.EDU
+	csail.mit.edu = CSAIL.MIT.EDU
+	.whoi.edu = ATHENA.MIT.EDU
+	whoi.edu = ATHENA.MIT.EDU
+	.stanford.edu = stanford.edu
+	.slac.stanford.edu = SLAC.STANFORD.EDU
+        .toronto.edu = UTORONTO.CA
+        .utoronto.ca = UTORONTO.CA
+
+```
+
+## Kreberos Ticket Anfordern
+
+kini [DomainUser(Admin)]
+
+kinit Administrator@KREUZERKEKNETWORK.DE
+
+## TiketsAnzeigen
+
+klist
+
+
+
+
 
 # Keytab File
 
