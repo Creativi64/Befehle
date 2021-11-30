@@ -87,6 +87,12 @@ ldapsearch -x -LLL -D"Fritz@kreuzerkeknet.de" -W -b \ "OU=Firma,DC=kreuzerKekNET
 die Security id kannn nach einem backup nicht wieder eingelsen werden
 des wegen ist es vorteil hast user fürs erste zu deaktivieren bis man sie komplett löscht
 
+## ldif
+
+ldifde "(objectClass=User)" -l "objectSID" -f ".\backup.ldf" -d "CN=[UserNAme],OU=[Unit],DC=[Domain],DC=[TDL]"
+
+## User
+
 ## isntall
 
  sudo apt-get install ldapscripts
@@ -130,6 +136,10 @@ sAMAccountName: Fritz12345
 ldapmodify -x -c -a -f "backuploadpas.ldif" -H "ldap://10.200.10.1" -D Administrator@kreuzerkeknetwork.de -W
 
 <http://pig.made-it.com/pig-adusers.html>
+
+## PAWWORT SETZEN Können
+
+<http://woshub.com/password-policy-active-directory/>
 
 # Kreberos Ticket Bekommen
 
@@ -262,3 +272,10 @@ klist
 
 
 <https://helgeklein.com/download/>
+
+
+<https://www.frankysweb.de/active-directory-passwortaenderung-mittels-webseite/>
+
+<https://sid-500.com/2017/03/31/active-directory-zertifikatsdienste-teil-2-installation-der-zertifizierungsstellen-webregistrierung/>
+<https://social.technet.microsoft.com/wiki/contents/articles/2980.ldap-over-ssl-ldaps-certificate.aspx>
+<https://techexpert.tips/de/windows-de/aktivieren-des-active-directory-ldap-over-ssl-features/>
