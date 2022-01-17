@@ -269,7 +269,8 @@ klist
 # Keytab File
 
 <http://www.itadmintools.com/2011/07/creating-kerberos-keytab-files.html>
-
+<https://docs.tibco.com/pub/spotfire_server/7.8.0/doc/html/TIB_sfire_server_tsas_admin_help/GUID-27726F6E-569C-4704-8433-5CCC0232EC79.html>
+<https://docs.oracle.com/cd/E24841_01/html/E23287/refer-5.html>
 
 <https://helgeklein.com/download/>
 
@@ -279,3 +280,6 @@ klist
 <https://sid-500.com/2017/03/31/active-directory-zertifikatsdienste-teil-2-installation-der-zertifizierungsstellen-webregistrierung/>
 <https://social.technet.microsoft.com/wiki/contents/articles/2980.ldap-over-ssl-ldaps-certificate.aspx>
 <https://techexpert.tips/de/windows-de/aktivieren-des-active-directory-ldap-over-ssl-features/>
+
+
+<https://wiki.ubuntuusers.de/GRUB_2/Konfiguration/>
